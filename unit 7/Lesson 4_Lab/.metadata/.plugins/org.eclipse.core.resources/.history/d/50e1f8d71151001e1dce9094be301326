@@ -1,0 +1,33 @@
+/*
+ * STM32F103C6_KEYPAD.h
+ *
+ *  Created on: Sep 12, 2023
+ *      Author: Bahaa
+ */
+
+#ifndef KEYPAD_DRIVER_STM32F103C6_KEYPAD_H_
+#define KEYPAD_DRIVER_STM32F103C6_KEYPAD_H_
+
+#include <Stm32_F1103C6_gpio_driver.h>
+
+#define KEYPAD_PORT GPIOB
+
+#define R0 GPIO_PIN0
+#define R1 GPIO_PIN1
+#define R2 GPIO_PIN3
+#define R3 GPIO_PIN4
+#define C0 GPIO_PIN5
+#define C1 GPIO_PIN6
+#define C2 GPIO_PIN7
+#define C3 GPIO_PIN8
+
+//-------------------------------------------------
+// KEYPAD FUNCTIONS
+//-------------------------------------------------
+
+
+void KEYPAD_INIT(void);
+
+char KEYPAD_GET_KEY(void);
+
+#endif /* KEYPAD_DRIVER_STM32F103C6_KEYPAD_H_ */

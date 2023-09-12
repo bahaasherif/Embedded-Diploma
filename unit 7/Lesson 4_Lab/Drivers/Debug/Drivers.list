@@ -1,0 +1,835 @@
+
+Drivers.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000130  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00000438  08000130  08000130  00010130  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  08000568  08000570  00010570  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  08000568  08000568  00010570  2**0
+                  CONTENTS
+  4 .ARM          00000000  08000568  08000568  00010570  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08000568  08000570  00010570  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08000568  08000568  00010568  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  0800056c  0800056c  0001056c  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000000  20000000  20000000  00010570  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000001c  20000000  08000570  00020000  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000604  2000001c  08000570  0002001c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  00010570  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   0000191f  00000000  00000000  00010599  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_abbrev 000003e4  00000000  00000000  00011eb8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_loc    0000044c  00000000  00000000  0001229c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 15 .debug_aranges 000000c0  00000000  00000000  000126e8  2**3
+                  CONTENTS, READONLY, DEBUGGING
+ 16 .debug_ranges 00000098  00000000  00000000  000127a8  2**3
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .debug_macro  00001bd0  00000000  00000000  00012840  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 18 .debug_line   00000ccf  00000000  00000000  00014410  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 19 .debug_str    0000766c  00000000  00000000  000150df  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 20 .comment      0000007b  00000000  00000000  0001c74b  2**0
+                  CONTENTS, READONLY
+ 21 .debug_frame  0000023c  00000000  00000000  0001c7c8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+08000130 <__do_global_dtors_aux>:
+ 8000130:	b510      	push	{r4, lr}
+ 8000132:	4c05      	ldr	r4, [pc, #20]	; (8000148 <__do_global_dtors_aux+0x18>)
+ 8000134:	7823      	ldrb	r3, [r4, #0]
+ 8000136:	b933      	cbnz	r3, 8000146 <__do_global_dtors_aux+0x16>
+ 8000138:	4b04      	ldr	r3, [pc, #16]	; (800014c <__do_global_dtors_aux+0x1c>)
+ 800013a:	b113      	cbz	r3, 8000142 <__do_global_dtors_aux+0x12>
+ 800013c:	4804      	ldr	r0, [pc, #16]	; (8000150 <__do_global_dtors_aux+0x20>)
+ 800013e:	f3af 8000 	nop.w
+ 8000142:	2301      	movs	r3, #1
+ 8000144:	7023      	strb	r3, [r4, #0]
+ 8000146:	bd10      	pop	{r4, pc}
+ 8000148:	20000000 	.word	0x20000000
+ 800014c:	00000000 	.word	0x00000000
+ 8000150:	08000550 	.word	0x08000550
+
+08000154 <frame_dummy>:
+ 8000154:	b508      	push	{r3, lr}
+ 8000156:	4b03      	ldr	r3, [pc, #12]	; (8000164 <frame_dummy+0x10>)
+ 8000158:	b11b      	cbz	r3, 8000162 <frame_dummy+0xe>
+ 800015a:	4903      	ldr	r1, [pc, #12]	; (8000168 <frame_dummy+0x14>)
+ 800015c:	4803      	ldr	r0, [pc, #12]	; (800016c <frame_dummy+0x18>)
+ 800015e:	f3af 8000 	nop.w
+ 8000162:	bd08      	pop	{r3, pc}
+ 8000164:	00000000 	.word	0x00000000
+ 8000168:	20000004 	.word	0x20000004
+ 800016c:	08000550 	.word	0x08000550
+
+08000170 <clock_init>:
+#include <stm32f103x6.h>
+#include <Stm32_F1103C6_gpio_driver.h>
+
+
+void clock_init()
+{
+ 8000170:	b480      	push	{r7}
+ 8000172:	af00      	add	r7, sp, #0
+	//Enable clock GPIOA
+	RCC_GPIOA_CLK_EN();
+ 8000174:	4b07      	ldr	r3, [pc, #28]	; (8000194 <clock_init+0x24>)
+ 8000176:	699b      	ldr	r3, [r3, #24]
+ 8000178:	4a06      	ldr	r2, [pc, #24]	; (8000194 <clock_init+0x24>)
+ 800017a:	f043 0304 	orr.w	r3, r3, #4
+ 800017e:	6193      	str	r3, [r2, #24]
+	//Enable clock GPIOB
+	RCC_GPIOB_CLK_EN();
+ 8000180:	4b04      	ldr	r3, [pc, #16]	; (8000194 <clock_init+0x24>)
+ 8000182:	699b      	ldr	r3, [r3, #24]
+ 8000184:	4a03      	ldr	r2, [pc, #12]	; (8000194 <clock_init+0x24>)
+ 8000186:	f043 0308 	orr.w	r3, r3, #8
+ 800018a:	6193      	str	r3, [r2, #24]
+
+}
+ 800018c:	bf00      	nop
+ 800018e:	46bd      	mov	sp, r7
+ 8000190:	bc80      	pop	{r7}
+ 8000192:	4770      	bx	lr
+ 8000194:	40021000 	.word	0x40021000
+
+08000198 <GPIO_init>:
+
+void GPIO_init()
+{
+ 8000198:	b580      	push	{r7, lr}
+ 800019a:	b082      	sub	sp, #8
+ 800019c:	af00      	add	r7, sp, #0
+	GPIO_PinConfig_t PinCfg;
+
+	//PA1:floating input
+	PinCfg.GPIO_PinNumber = GPIO_PIN_1;
+ 800019e:	2302      	movs	r3, #2
+ 80001a0:	80bb      	strh	r3, [r7, #4]
+	PinCfg.GPIO_Mode = GPIO_MODE_INPUT_FLO;
+ 80001a2:	2301      	movs	r3, #1
+ 80001a4:	71bb      	strb	r3, [r7, #6]
+	MCAL_GPIO_Init(GPIOA, &PinCfg);
+ 80001a6:	1d3b      	adds	r3, r7, #4
+ 80001a8:	4619      	mov	r1, r3
+ 80001aa:	4814      	ldr	r0, [pc, #80]	; (80001fc <GPIO_init+0x64>)
+ 80001ac:	f000 f904 	bl	80003b8 <MCAL_GPIO_Init>
+
+	//PB1 : output push pull Mode 10MHz.
+	PinCfg.GPIO_PinNumber = GPIO_PIN_1;
+ 80001b0:	2302      	movs	r3, #2
+ 80001b2:	80bb      	strh	r3, [r7, #4]
+	PinCfg.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
+ 80001b4:	2304      	movs	r3, #4
+ 80001b6:	71bb      	strb	r3, [r7, #6]
+	PinCfg.GPIO_Output_Speed = GPIO_SPEED_10M;
+ 80001b8:	2301      	movs	r3, #1
+ 80001ba:	71fb      	strb	r3, [r7, #7]
+	MCAL_GPIO_Init(GPIOB, &PinCfg);
+ 80001bc:	1d3b      	adds	r3, r7, #4
+ 80001be:	4619      	mov	r1, r3
+ 80001c0:	480f      	ldr	r0, [pc, #60]	; (8000200 <GPIO_init+0x68>)
+ 80001c2:	f000 f8f9 	bl	80003b8 <MCAL_GPIO_Init>
+
+	//PA13:floating input
+	PinCfg.GPIO_PinNumber = GPIO_PIN_13;
+ 80001c6:	f44f 5300 	mov.w	r3, #8192	; 0x2000
+ 80001ca:	80bb      	strh	r3, [r7, #4]
+	PinCfg.GPIO_Mode = GPIO_MODE_INPUT_FLO;
+ 80001cc:	2301      	movs	r3, #1
+ 80001ce:	71bb      	strb	r3, [r7, #6]
+	MCAL_GPIO_Init(GPIOA, &PinCfg);
+ 80001d0:	1d3b      	adds	r3, r7, #4
+ 80001d2:	4619      	mov	r1, r3
+ 80001d4:	4809      	ldr	r0, [pc, #36]	; (80001fc <GPIO_init+0x64>)
+ 80001d6:	f000 f8ef 	bl	80003b8 <MCAL_GPIO_Init>
+
+	//PB13 : output push pull Mode 10MHz.
+	PinCfg.GPIO_PinNumber = GPIO_PIN_13;
+ 80001da:	f44f 5300 	mov.w	r3, #8192	; 0x2000
+ 80001de:	80bb      	strh	r3, [r7, #4]
+	PinCfg.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
+ 80001e0:	2304      	movs	r3, #4
+ 80001e2:	71bb      	strb	r3, [r7, #6]
+	PinCfg.GPIO_Output_Speed = GPIO_SPEED_10M;
+ 80001e4:	2301      	movs	r3, #1
+ 80001e6:	71fb      	strb	r3, [r7, #7]
+	MCAL_GPIO_Init(GPIOB, &PinCfg);
+ 80001e8:	1d3b      	adds	r3, r7, #4
+ 80001ea:	4619      	mov	r1, r3
+ 80001ec:	4804      	ldr	r0, [pc, #16]	; (8000200 <GPIO_init+0x68>)
+ 80001ee:	f000 f8e3 	bl	80003b8 <MCAL_GPIO_Init>
+}
+ 80001f2:	bf00      	nop
+ 80001f4:	3708      	adds	r7, #8
+ 80001f6:	46bd      	mov	sp, r7
+ 80001f8:	bd80      	pop	{r7, pc}
+ 80001fa:	bf00      	nop
+ 80001fc:	40010800 	.word	0x40010800
+ 8000200:	40010c00 	.word	0x40010c00
+
+08000204 <my_wait>:
+
+void my_wait(int x)
+{
+ 8000204:	b480      	push	{r7}
+ 8000206:	b085      	sub	sp, #20
+ 8000208:	af00      	add	r7, sp, #0
+ 800020a:	6078      	str	r0, [r7, #4]
+	unsigned int i,j;
+	for ( i =0 ; i < x ; i++)
+ 800020c:	2300      	movs	r3, #0
+ 800020e:	60fb      	str	r3, [r7, #12]
+ 8000210:	e00c      	b.n	800022c <my_wait+0x28>
+		for ( j=0 ; j<x;j++);
+ 8000212:	2300      	movs	r3, #0
+ 8000214:	60bb      	str	r3, [r7, #8]
+ 8000216:	e002      	b.n	800021e <my_wait+0x1a>
+ 8000218:	68bb      	ldr	r3, [r7, #8]
+ 800021a:	3301      	adds	r3, #1
+ 800021c:	60bb      	str	r3, [r7, #8]
+ 800021e:	687b      	ldr	r3, [r7, #4]
+ 8000220:	68ba      	ldr	r2, [r7, #8]
+ 8000222:	429a      	cmp	r2, r3
+ 8000224:	d3f8      	bcc.n	8000218 <my_wait+0x14>
+	for ( i =0 ; i < x ; i++)
+ 8000226:	68fb      	ldr	r3, [r7, #12]
+ 8000228:	3301      	adds	r3, #1
+ 800022a:	60fb      	str	r3, [r7, #12]
+ 800022c:	687b      	ldr	r3, [r7, #4]
+ 800022e:	68fa      	ldr	r2, [r7, #12]
+ 8000230:	429a      	cmp	r2, r3
+ 8000232:	d3ee      	bcc.n	8000212 <my_wait+0xe>
+}
+ 8000234:	bf00      	nop
+ 8000236:	3714      	adds	r7, #20
+ 8000238:	46bd      	mov	sp, r7
+ 800023a:	bc80      	pop	{r7}
+ 800023c:	4770      	bx	lr
+	...
+
+08000240 <main>:
+
+int main(void)
+{
+ 8000240:	b580      	push	{r7, lr}
+ 8000242:	af00      	add	r7, sp, #0
+	clock_init();
+ 8000244:	f7ff ff94 	bl	8000170 <clock_init>
+	GPIO_init();
+ 8000248:	f7ff ffa6 	bl	8000198 <GPIO_init>
+
+
+	while(1)
+	{
+		//PA1 press (PUR)
+		if(MCAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == 0) // pressed
+ 800024c:	2102      	movs	r1, #2
+ 800024e:	4812      	ldr	r0, [pc, #72]	; (8000298 <main+0x58>)
+ 8000250:	f000 f931 	bl	80004b6 <MCAL_GPIO_ReadPin>
+ 8000254:	4603      	mov	r3, r0
+ 8000256:	2b00      	cmp	r3, #0
+ 8000258:	d10b      	bne.n	8000272 <main+0x32>
+		{
+			MCAL_GPIO_TooglePin(GPIOB, GPIO_PIN_1);
+ 800025a:	2102      	movs	r1, #2
+ 800025c:	480f      	ldr	r0, [pc, #60]	; (800029c <main+0x5c>)
+ 800025e:	f000 f941 	bl	80004e4 <MCAL_GPIO_TooglePin>
+			while(MCAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == 0); // single press
+ 8000262:	bf00      	nop
+ 8000264:	2102      	movs	r1, #2
+ 8000266:	480c      	ldr	r0, [pc, #48]	; (8000298 <main+0x58>)
+ 8000268:	f000 f925 	bl	80004b6 <MCAL_GPIO_ReadPin>
+ 800026c:	4603      	mov	r3, r0
+ 800026e:	2b00      	cmp	r3, #0
+ 8000270:	d0f8      	beq.n	8000264 <main+0x24>
+		}
+
+		//PA13 pressed (PDR)
+		if(MCAL_GPIO_ReadPin(GPIOA, GPIO_PIN_13)== 1)
+ 8000272:	f44f 5100 	mov.w	r1, #8192	; 0x2000
+ 8000276:	4808      	ldr	r0, [pc, #32]	; (8000298 <main+0x58>)
+ 8000278:	f000 f91d 	bl	80004b6 <MCAL_GPIO_ReadPin>
+ 800027c:	4603      	mov	r3, r0
+ 800027e:	2b01      	cmp	r3, #1
+ 8000280:	d104      	bne.n	800028c <main+0x4c>
+		{
+			MCAL_GPIO_TooglePin(GPIOB, GPIO_PIN_13);
+ 8000282:	f44f 5100 	mov.w	r1, #8192	; 0x2000
+ 8000286:	4805      	ldr	r0, [pc, #20]	; (800029c <main+0x5c>)
+ 8000288:	f000 f92c 	bl	80004e4 <MCAL_GPIO_TooglePin>
+		}
+		my_wait(300);
+ 800028c:	f44f 7096 	mov.w	r0, #300	; 0x12c
+ 8000290:	f7ff ffb8 	bl	8000204 <my_wait>
+		if(MCAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == 0) // pressed
+ 8000294:	e7da      	b.n	800024c <main+0xc>
+ 8000296:	bf00      	nop
+ 8000298:	40010800 	.word	0x40010800
+ 800029c:	40010c00 	.word	0x40010c00
+
+080002a0 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 80002a0:	480d      	ldr	r0, [pc, #52]	; (80002d8 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 80002a2:	4685      	mov	sp, r0
+/* Call the clock system intitialization function.*/
+  bl  SystemInit
+ 80002a4:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 80002a8:	480c      	ldr	r0, [pc, #48]	; (80002dc <LoopForever+0x6>)
+  ldr r1, =_edata
+ 80002aa:	490d      	ldr	r1, [pc, #52]	; (80002e0 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 80002ac:	4a0d      	ldr	r2, [pc, #52]	; (80002e4 <LoopForever+0xe>)
+  movs r3, #0
+ 80002ae:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 80002b0:	e002      	b.n	80002b8 <LoopCopyDataInit>
+
+080002b2 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 80002b2:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 80002b4:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 80002b6:	3304      	adds	r3, #4
+
+080002b8 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 80002b8:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 80002ba:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 80002bc:	d3f9      	bcc.n	80002b2 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 80002be:	4a0a      	ldr	r2, [pc, #40]	; (80002e8 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80002c0:	4c0a      	ldr	r4, [pc, #40]	; (80002ec <LoopForever+0x16>)
+  movs r3, #0
+ 80002c2:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80002c4:	e001      	b.n	80002ca <LoopFillZerobss>
+
+080002c6 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80002c6:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 80002c8:	3204      	adds	r2, #4
+
+080002ca <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 80002ca:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 80002cc:	d3fb      	bcc.n	80002c6 <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 80002ce:	f000 f91b 	bl	8000508 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 80002d2:	f7ff ffb5 	bl	8000240 <main>
+
+080002d6 <LoopForever>:
+
+LoopForever:
+    b LoopForever
+ 80002d6:	e7fe      	b.n	80002d6 <LoopForever>
+  ldr   r0, =_estack
+ 80002d8:	20002800 	.word	0x20002800
+  ldr r0, =_sdata
+ 80002dc:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 80002e0:	20000000 	.word	0x20000000
+  ldr r2, =_sidata
+ 80002e4:	08000570 	.word	0x08000570
+  ldr r2, =_sbss
+ 80002e8:	20000000 	.word	0x20000000
+  ldr r4, =_ebss
+ 80002ec:	2000001c 	.word	0x2000001c
+
+080002f0 <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 80002f0:	e7fe      	b.n	80002f0 <ADC1_2_IRQHandler>
+
+080002f2 <Get_CRLH_POSITION>:
+ */
+
+#include "Stm32_F1103C6_gpio_driver.h"
+
+uint8_t Get_CRLH_POSITION(uint16_t PinNumber)
+{
+ 80002f2:	b480      	push	{r7}
+ 80002f4:	b083      	sub	sp, #12
+ 80002f6:	af00      	add	r7, sp, #0
+ 80002f8:	4603      	mov	r3, r0
+ 80002fa:	80fb      	strh	r3, [r7, #6]
+	switch(PinNumber)
+ 80002fc:	88fb      	ldrh	r3, [r7, #6]
+ 80002fe:	2b80      	cmp	r3, #128	; 0x80
+ 8000300:	d042      	beq.n	8000388 <Get_CRLH_POSITION+0x96>
+ 8000302:	2b80      	cmp	r3, #128	; 0x80
+ 8000304:	dc11      	bgt.n	800032a <Get_CRLH_POSITION+0x38>
+ 8000306:	2b08      	cmp	r3, #8
+ 8000308:	d036      	beq.n	8000378 <Get_CRLH_POSITION+0x86>
+ 800030a:	2b08      	cmp	r3, #8
+ 800030c:	dc06      	bgt.n	800031c <Get_CRLH_POSITION+0x2a>
+ 800030e:	2b02      	cmp	r3, #2
+ 8000310:	d02e      	beq.n	8000370 <Get_CRLH_POSITION+0x7e>
+ 8000312:	2b04      	cmp	r3, #4
+ 8000314:	d02e      	beq.n	8000374 <Get_CRLH_POSITION+0x82>
+ 8000316:	2b01      	cmp	r3, #1
+ 8000318:	d028      	beq.n	800036c <Get_CRLH_POSITION+0x7a>
+ 800031a:	e047      	b.n	80003ac <Get_CRLH_POSITION+0xba>
+ 800031c:	2b20      	cmp	r3, #32
+ 800031e:	d02f      	beq.n	8000380 <Get_CRLH_POSITION+0x8e>
+ 8000320:	2b40      	cmp	r3, #64	; 0x40
+ 8000322:	d02f      	beq.n	8000384 <Get_CRLH_POSITION+0x92>
+ 8000324:	2b10      	cmp	r3, #16
+ 8000326:	d029      	beq.n	800037c <Get_CRLH_POSITION+0x8a>
+ 8000328:	e040      	b.n	80003ac <Get_CRLH_POSITION+0xba>
+ 800032a:	f5b3 6f00 	cmp.w	r3, #2048	; 0x800
+ 800032e:	d033      	beq.n	8000398 <Get_CRLH_POSITION+0xa6>
+ 8000330:	f5b3 6f00 	cmp.w	r3, #2048	; 0x800
+ 8000334:	dc09      	bgt.n	800034a <Get_CRLH_POSITION+0x58>
+ 8000336:	f5b3 7f00 	cmp.w	r3, #512	; 0x200
+ 800033a:	d029      	beq.n	8000390 <Get_CRLH_POSITION+0x9e>
+ 800033c:	f5b3 6f80 	cmp.w	r3, #1024	; 0x400
+ 8000340:	d028      	beq.n	8000394 <Get_CRLH_POSITION+0xa2>
+ 8000342:	f5b3 7f80 	cmp.w	r3, #256	; 0x100
+ 8000346:	d021      	beq.n	800038c <Get_CRLH_POSITION+0x9a>
+ 8000348:	e030      	b.n	80003ac <Get_CRLH_POSITION+0xba>
+ 800034a:	f5b3 5f00 	cmp.w	r3, #8192	; 0x2000
+ 800034e:	d027      	beq.n	80003a0 <Get_CRLH_POSITION+0xae>
+ 8000350:	f5b3 5f00 	cmp.w	r3, #8192	; 0x2000
+ 8000354:	dc03      	bgt.n	800035e <Get_CRLH_POSITION+0x6c>
+ 8000356:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
+ 800035a:	d01f      	beq.n	800039c <Get_CRLH_POSITION+0xaa>
+ 800035c:	e026      	b.n	80003ac <Get_CRLH_POSITION+0xba>
+ 800035e:	f5b3 4f80 	cmp.w	r3, #16384	; 0x4000
+ 8000362:	d01f      	beq.n	80003a4 <Get_CRLH_POSITION+0xb2>
+ 8000364:	f5b3 4f00 	cmp.w	r3, #32768	; 0x8000
+ 8000368:	d01e      	beq.n	80003a8 <Get_CRLH_POSITION+0xb6>
+ 800036a:	e01f      	b.n	80003ac <Get_CRLH_POSITION+0xba>
+	{
+	case GPIO_PIN_0:
+		return 0;
+ 800036c:	2300      	movs	r3, #0
+ 800036e:	e01e      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_1:
+		return 4;
+ 8000370:	2304      	movs	r3, #4
+ 8000372:	e01c      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_2:
+		return 8;
+ 8000374:	2308      	movs	r3, #8
+ 8000376:	e01a      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_3:
+		return 12;
+ 8000378:	230c      	movs	r3, #12
+ 800037a:	e018      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_4:
+		return 16;
+ 800037c:	2310      	movs	r3, #16
+ 800037e:	e016      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_5:
+		return 20;
+ 8000380:	2314      	movs	r3, #20
+ 8000382:	e014      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_6:
+		return 24;
+ 8000384:	2318      	movs	r3, #24
+ 8000386:	e012      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_7:
+		return 28;
+ 8000388:	231c      	movs	r3, #28
+ 800038a:	e010      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_8:
+		return 0;
+ 800038c:	2300      	movs	r3, #0
+ 800038e:	e00e      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_9:
+		return 4;
+ 8000390:	2304      	movs	r3, #4
+ 8000392:	e00c      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_10:
+		return 8;
+ 8000394:	2308      	movs	r3, #8
+ 8000396:	e00a      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_11:
+		return 12;
+ 8000398:	230c      	movs	r3, #12
+ 800039a:	e008      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_12:
+		return 16;
+ 800039c:	2310      	movs	r3, #16
+ 800039e:	e006      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_13:
+		return 20;
+ 80003a0:	2314      	movs	r3, #20
+ 80003a2:	e004      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_14:
+		return 24;
+ 80003a4:	2318      	movs	r3, #24
+ 80003a6:	e002      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	case GPIO_PIN_15:
+		return 28;
+ 80003a8:	231c      	movs	r3, #28
+ 80003aa:	e000      	b.n	80003ae <Get_CRLH_POSITION+0xbc>
+		break;
+	}
+	return 0;
+ 80003ac:	2300      	movs	r3, #0
+}
+ 80003ae:	4618      	mov	r0, r3
+ 80003b0:	370c      	adds	r7, #12
+ 80003b2:	46bd      	mov	sp, r7
+ 80003b4:	bc80      	pop	{r7}
+ 80003b6:	4770      	bx	lr
+
+080003b8 <MCAL_GPIO_Init>:
+
+
+void MCAL_GPIO_Init (GPIO_TypeDef *GPIOx, GPIO_PinConfig_t* PinConfig)
+{
+ 80003b8:	b590      	push	{r4, r7, lr}
+ 80003ba:	b085      	sub	sp, #20
+ 80003bc:	af00      	add	r7, sp, #0
+ 80003be:	6078      	str	r0, [r7, #4]
+ 80003c0:	6039      	str	r1, [r7, #0]
+	//Port configuration register Low (GPIO_CRL) Configure Pins from 0 to 7
+	//Port configuration register High (GPIO_CRH) Configure Pins from 8 to 15
+
+	volatile uint32_t *configregister = NULL ;
+ 80003c2:	2300      	movs	r3, #0
+ 80003c4:	60bb      	str	r3, [r7, #8]
+	uint8_t Pin_Conf = 0;
+ 80003c6:	2300      	movs	r3, #0
+ 80003c8:	73fb      	strb	r3, [r7, #15]
+
+	configregister = (PinConfig->GPIO_PinNumber < GPIO_PIN_8)? &GPIOx->CRL : &GPIOx->CRH ;
+ 80003ca:	683b      	ldr	r3, [r7, #0]
+ 80003cc:	881b      	ldrh	r3, [r3, #0]
+ 80003ce:	2bff      	cmp	r3, #255	; 0xff
+ 80003d0:	d801      	bhi.n	80003d6 <MCAL_GPIO_Init+0x1e>
+ 80003d2:	687b      	ldr	r3, [r7, #4]
+ 80003d4:	e001      	b.n	80003da <MCAL_GPIO_Init+0x22>
+ 80003d6:	687b      	ldr	r3, [r7, #4]
+ 80003d8:	3304      	adds	r3, #4
+ 80003da:	60bb      	str	r3, [r7, #8]
+
+	//clear CNFx and MODEx
+	(*configregister) &= ~(0xf << Get_CRLH_POSITION(PinConfig->GPIO_PinNumber));
+ 80003dc:	683b      	ldr	r3, [r7, #0]
+ 80003de:	881b      	ldrh	r3, [r3, #0]
+ 80003e0:	4618      	mov	r0, r3
+ 80003e2:	f7ff ff86 	bl	80002f2 <Get_CRLH_POSITION>
+ 80003e6:	4603      	mov	r3, r0
+ 80003e8:	461a      	mov	r2, r3
+ 80003ea:	230f      	movs	r3, #15
+ 80003ec:	4093      	lsls	r3, r2
+ 80003ee:	43da      	mvns	r2, r3
+ 80003f0:	68bb      	ldr	r3, [r7, #8]
+ 80003f2:	681b      	ldr	r3, [r3, #0]
+ 80003f4:	401a      	ands	r2, r3
+ 80003f6:	68bb      	ldr	r3, [r7, #8]
+ 80003f8:	601a      	str	r2, [r3, #0]
+
+	//if Pin is output
+	if(		PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_AF_OD 	||
+ 80003fa:	683b      	ldr	r3, [r7, #0]
+ 80003fc:	789b      	ldrb	r3, [r3, #2]
+ 80003fe:	2b07      	cmp	r3, #7
+ 8000400:	d00b      	beq.n	800041a <MCAL_GPIO_Init+0x62>
+			PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_AF_PP 	||
+ 8000402:	683b      	ldr	r3, [r7, #0]
+ 8000404:	789b      	ldrb	r3, [r3, #2]
+	if(		PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_AF_OD 	||
+ 8000406:	2b06      	cmp	r3, #6
+ 8000408:	d007      	beq.n	800041a <MCAL_GPIO_Init+0x62>
+			PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_OD 	||
+ 800040a:	683b      	ldr	r3, [r7, #0]
+ 800040c:	789b      	ldrb	r3, [r3, #2]
+			PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_AF_PP 	||
+ 800040e:	2b05      	cmp	r3, #5
+ 8000410:	d003      	beq.n	800041a <MCAL_GPIO_Init+0x62>
+			PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_PP )
+ 8000412:	683b      	ldr	r3, [r7, #0]
+ 8000414:	789b      	ldrb	r3, [r3, #2]
+			PinConfig->GPIO_Mode == GPIO_MODE_OUTPUT_OD 	||
+ 8000416:	2b04      	cmp	r3, #4
+ 8000418:	d10e      	bne.n	8000438 <MCAL_GPIO_Init+0x80>
+	{
+		//set CNFx and MODEx
+		Pin_Conf = (((PinConfig->GPIO_Mode - 4) << 2) | (PinConfig->GPIO_Output_Speed)) & 0x0f;
+ 800041a:	683b      	ldr	r3, [r7, #0]
+ 800041c:	789b      	ldrb	r3, [r3, #2]
+ 800041e:	3b04      	subs	r3, #4
+ 8000420:	009b      	lsls	r3, r3, #2
+ 8000422:	b25a      	sxtb	r2, r3
+ 8000424:	683b      	ldr	r3, [r7, #0]
+ 8000426:	78db      	ldrb	r3, [r3, #3]
+ 8000428:	b25b      	sxtb	r3, r3
+ 800042a:	4313      	orrs	r3, r2
+ 800042c:	b25b      	sxtb	r3, r3
+ 800042e:	b2db      	uxtb	r3, r3
+ 8000430:	f003 030f 	and.w	r3, r3, #15
+ 8000434:	73fb      	strb	r3, [r7, #15]
+ 8000436:	e02c      	b.n	8000492 <MCAL_GPIO_Init+0xda>
+	}
+	//if Pin in input
+	else //Mode == 00
+	{
+		if(PinConfig->GPIO_Mode == GPIO_MODE_ANALOG || PinConfig->GPIO_Mode == GPIO_MODE_INPUT_FLO)
+ 8000438:	683b      	ldr	r3, [r7, #0]
+ 800043a:	789b      	ldrb	r3, [r3, #2]
+ 800043c:	2b00      	cmp	r3, #0
+ 800043e:	d003      	beq.n	8000448 <MCAL_GPIO_Init+0x90>
+ 8000440:	683b      	ldr	r3, [r7, #0]
+ 8000442:	789b      	ldrb	r3, [r3, #2]
+ 8000444:	2b01      	cmp	r3, #1
+ 8000446:	d107      	bne.n	8000458 <MCAL_GPIO_Init+0xa0>
+		{
+			//set CNFx and MODEx
+			Pin_Conf = ((PinConfig->GPIO_Mode << 2) | 0x0) & 0x0f;
+ 8000448:	683b      	ldr	r3, [r7, #0]
+ 800044a:	789b      	ldrb	r3, [r3, #2]
+ 800044c:	009b      	lsls	r3, r3, #2
+ 800044e:	b2db      	uxtb	r3, r3
+ 8000450:	f003 030f 	and.w	r3, r3, #15
+ 8000454:	73fb      	strb	r3, [r7, #15]
+ 8000456:	e01c      	b.n	8000492 <MCAL_GPIO_Init+0xda>
+		}
+		else if(PinConfig->GPIO_Mode == GPIO_MODE_AF_INPUT) // consider it as input floating
+ 8000458:	683b      	ldr	r3, [r7, #0]
+ 800045a:	789b      	ldrb	r3, [r3, #2]
+ 800045c:	2b08      	cmp	r3, #8
+ 800045e:	d102      	bne.n	8000466 <MCAL_GPIO_Init+0xae>
+		{
+			//set CNFx and MODEx
+			Pin_Conf = ((GPIO_MODE_INPUT_FLO << 2) | 0x0) & 0x0f;
+ 8000460:	2304      	movs	r3, #4
+ 8000462:	73fb      	strb	r3, [r7, #15]
+ 8000464:	e015      	b.n	8000492 <MCAL_GPIO_Init+0xda>
+		}
+		else //PU and PD Input
+		{
+			Pin_Conf = ((GPIO_MODE_INPUT_PU << 2) | 0x0) & 0x0f;
+ 8000466:	2308      	movs	r3, #8
+ 8000468:	73fb      	strb	r3, [r7, #15]
+
+			if(PinConfig->GPIO_Mode == GPIO_MODE_INPUT_PU)
+ 800046a:	683b      	ldr	r3, [r7, #0]
+ 800046c:	789b      	ldrb	r3, [r3, #2]
+ 800046e:	2b02      	cmp	r3, #2
+ 8000470:	d107      	bne.n	8000482 <MCAL_GPIO_Init+0xca>
+			{
+				GPIOx->ODR |= PinConfig->GPIO_PinNumber;
+ 8000472:	687b      	ldr	r3, [r7, #4]
+ 8000474:	68db      	ldr	r3, [r3, #12]
+ 8000476:	683a      	ldr	r2, [r7, #0]
+ 8000478:	8812      	ldrh	r2, [r2, #0]
+ 800047a:	431a      	orrs	r2, r3
+ 800047c:	687b      	ldr	r3, [r7, #4]
+ 800047e:	60da      	str	r2, [r3, #12]
+ 8000480:	e007      	b.n	8000492 <MCAL_GPIO_Init+0xda>
+			}
+			else
+			{
+				GPIOx->ODR &= ~(PinConfig->GPIO_PinNumber);
+ 8000482:	687b      	ldr	r3, [r7, #4]
+ 8000484:	68db      	ldr	r3, [r3, #12]
+ 8000486:	683a      	ldr	r2, [r7, #0]
+ 8000488:	8812      	ldrh	r2, [r2, #0]
+ 800048a:	43d2      	mvns	r2, r2
+ 800048c:	401a      	ands	r2, r3
+ 800048e:	687b      	ldr	r3, [r7, #4]
+ 8000490:	60da      	str	r2, [r3, #12]
+			}
+		}
+	}
+
+	*configregister |= ((Pin_Conf) << Get_CRLH_POSITION(PinConfig->GPIO_PinNumber));
+ 8000492:	7bfc      	ldrb	r4, [r7, #15]
+ 8000494:	683b      	ldr	r3, [r7, #0]
+ 8000496:	881b      	ldrh	r3, [r3, #0]
+ 8000498:	4618      	mov	r0, r3
+ 800049a:	f7ff ff2a 	bl	80002f2 <Get_CRLH_POSITION>
+ 800049e:	4603      	mov	r3, r0
+ 80004a0:	fa04 f203 	lsl.w	r2, r4, r3
+ 80004a4:	68bb      	ldr	r3, [r7, #8]
+ 80004a6:	681b      	ldr	r3, [r3, #0]
+ 80004a8:	431a      	orrs	r2, r3
+ 80004aa:	68bb      	ldr	r3, [r7, #8]
+ 80004ac:	601a      	str	r2, [r3, #0]
+}
+ 80004ae:	bf00      	nop
+ 80004b0:	3714      	adds	r7, #20
+ 80004b2:	46bd      	mov	sp, r7
+ 80004b4:	bd90      	pop	{r4, r7, pc}
+
+080004b6 <MCAL_GPIO_ReadPin>:
+		}
+}
+
+
+uint8_t MCAL_GPIO_ReadPin	(GPIO_TypeDef *GPIOx, uint16_t PinNumber)
+{
+ 80004b6:	b480      	push	{r7}
+ 80004b8:	b085      	sub	sp, #20
+ 80004ba:	af00      	add	r7, sp, #0
+ 80004bc:	6078      	str	r0, [r7, #4]
+ 80004be:	460b      	mov	r3, r1
+ 80004c0:	807b      	strh	r3, [r7, #2]
+	uint8_t bit;
+	if((GPIOx->IDR & PinNumber) != (uint32_t)GPIO_PIN_reset)
+ 80004c2:	687b      	ldr	r3, [r7, #4]
+ 80004c4:	689a      	ldr	r2, [r3, #8]
+ 80004c6:	887b      	ldrh	r3, [r7, #2]
+ 80004c8:	4013      	ands	r3, r2
+ 80004ca:	2b00      	cmp	r3, #0
+ 80004cc:	d002      	beq.n	80004d4 <MCAL_GPIO_ReadPin+0x1e>
+		bit = GPIO_PIN_set;
+ 80004ce:	2301      	movs	r3, #1
+ 80004d0:	73fb      	strb	r3, [r7, #15]
+ 80004d2:	e001      	b.n	80004d8 <MCAL_GPIO_ReadPin+0x22>
+	else
+		bit = GPIO_PIN_reset;
+ 80004d4:	2300      	movs	r3, #0
+ 80004d6:	73fb      	strb	r3, [r7, #15]
+	return bit;
+ 80004d8:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 80004da:	4618      	mov	r0, r3
+ 80004dc:	3714      	adds	r7, #20
+ 80004de:	46bd      	mov	sp, r7
+ 80004e0:	bc80      	pop	{r7}
+ 80004e2:	4770      	bx	lr
+
+080004e4 <MCAL_GPIO_TooglePin>:
+	GPIOx->ODR = (uint32_t)Value;
+}
+
+
+void MCAL_GPIO_TooglePin	(GPIO_TypeDef *GPIOx, uint16_t PinNumber)
+{
+ 80004e4:	b480      	push	{r7}
+ 80004e6:	b083      	sub	sp, #12
+ 80004e8:	af00      	add	r7, sp, #0
+ 80004ea:	6078      	str	r0, [r7, #4]
+ 80004ec:	460b      	mov	r3, r1
+ 80004ee:	807b      	strh	r3, [r7, #2]
+	GPIOx->ODR ^= PinNumber;
+ 80004f0:	687b      	ldr	r3, [r7, #4]
+ 80004f2:	68da      	ldr	r2, [r3, #12]
+ 80004f4:	887b      	ldrh	r3, [r7, #2]
+ 80004f6:	405a      	eors	r2, r3
+ 80004f8:	687b      	ldr	r3, [r7, #4]
+ 80004fa:	60da      	str	r2, [r3, #12]
+}
+ 80004fc:	bf00      	nop
+ 80004fe:	370c      	adds	r7, #12
+ 8000500:	46bd      	mov	sp, r7
+ 8000502:	bc80      	pop	{r7}
+ 8000504:	4770      	bx	lr
+	...
+
+08000508 <__libc_init_array>:
+ 8000508:	b570      	push	{r4, r5, r6, lr}
+ 800050a:	2500      	movs	r5, #0
+ 800050c:	4e0c      	ldr	r6, [pc, #48]	; (8000540 <__libc_init_array+0x38>)
+ 800050e:	4c0d      	ldr	r4, [pc, #52]	; (8000544 <__libc_init_array+0x3c>)
+ 8000510:	1ba4      	subs	r4, r4, r6
+ 8000512:	10a4      	asrs	r4, r4, #2
+ 8000514:	42a5      	cmp	r5, r4
+ 8000516:	d109      	bne.n	800052c <__libc_init_array+0x24>
+ 8000518:	f000 f81a 	bl	8000550 <_init>
+ 800051c:	2500      	movs	r5, #0
+ 800051e:	4e0a      	ldr	r6, [pc, #40]	; (8000548 <__libc_init_array+0x40>)
+ 8000520:	4c0a      	ldr	r4, [pc, #40]	; (800054c <__libc_init_array+0x44>)
+ 8000522:	1ba4      	subs	r4, r4, r6
+ 8000524:	10a4      	asrs	r4, r4, #2
+ 8000526:	42a5      	cmp	r5, r4
+ 8000528:	d105      	bne.n	8000536 <__libc_init_array+0x2e>
+ 800052a:	bd70      	pop	{r4, r5, r6, pc}
+ 800052c:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
+ 8000530:	4798      	blx	r3
+ 8000532:	3501      	adds	r5, #1
+ 8000534:	e7ee      	b.n	8000514 <__libc_init_array+0xc>
+ 8000536:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
+ 800053a:	4798      	blx	r3
+ 800053c:	3501      	adds	r5, #1
+ 800053e:	e7f2      	b.n	8000526 <__libc_init_array+0x1e>
+ 8000540:	08000568 	.word	0x08000568
+ 8000544:	08000568 	.word	0x08000568
+ 8000548:	08000568 	.word	0x08000568
+ 800054c:	0800056c 	.word	0x0800056c
+
+08000550 <_init>:
+ 8000550:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000552:	bf00      	nop
+ 8000554:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000556:	bc08      	pop	{r3}
+ 8000558:	469e      	mov	lr, r3
+ 800055a:	4770      	bx	lr
+
+0800055c <_fini>:
+ 800055c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800055e:	bf00      	nop
+ 8000560:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000562:	bc08      	pop	{r3}
+ 8000564:	469e      	mov	lr, r3
+ 8000566:	4770      	bx	lr

@@ -1,0 +1,55 @@
+/*
+ * Stm32_F1103C6_gpio_driver.c
+ *
+ *  Created on: Sep 9, 2023
+ *      Author: Bahaa
+ */
+
+#include "Stm32_F1103C6_EXTI_driver.h"
+#include "Stm32_F1103C6_gpio_driver.h"
+
+void MCAL_EXTI_GPIO_DeInit(void)
+{
+	EXTI->IMR = 	0x00000000;
+	EXTI->EMR = 	0x00000000;
+	EXTI->RTSR = 	0x00000000;
+	EXTI->FTSR = 	0x00000000;
+	EXTI->SWIER = 	0x00000000;
+	EXTI->PR = 		0xFFFFFFFF;
+
+	NVIC_IRQ6_EXTI0_Disable;
+	NVIC_IRQ7_EXTI1_Disable;
+	NVIC_IRQ8_EXTI2_Disable;
+	NVIC_IRQ9_EXTI3_Disable;
+	NVIC_IRQ10_EXTI4_Disable;
+	NVIC_IRQ23_EXTI9_5_Disable;
+	NVIC_IRQ30_EXTI15_10_Disable;
+}
+
+void MCAL_EXTI_GPIO_Init(EXTI_PinConfig_t * EXTI_Config)
+{
+	MCAL_EXTI_GPIO_Update(EXTI_Config);
+}
+
+void MCAL_EXTI_GPIO_Update(EXTI_PinConfig_t * EXTI_Config)
+{
+	//FIRST set pin to input floating
+	GPIO_PinConfig_t PinCfg;
+	PinCfg.GPIO_PinNumber = EXTI_Config->EXTI_PIN.GPIO_PIN;
+	PinCfg.GPIO_Mode = GPIO_MODE_INPUT_FLO;
+	MCAL_GPIO_Init(EXTI_Config->EXTI_PIN.GPIO_Port, &PinCfg);
+
+
+	//SECOND updating the AFIO
+
+
+	//THIRD setting the triggering edge
+
+
+	//FORTH updating IRQ callback
+
+
+	//FIFTH enabling/disabling the interrupt
+
+
+}

@@ -1,0 +1,24 @@
+/*
+ * Stm32_F1103C6_gpio_driver.c
+ *
+ *  Created on: Sep 9, 2023
+ *      Author: Bahaa
+ */
+
+#include "Stm32_F1103C6_EXTI_driver.h"
+
+void MCAL_EXTI_GPIO_DeInit(void)
+{
+	EXTI->IMR = 	0x00000000;
+	EXTI->EMR = 	0x00000000;
+	EXTI->RTSR = 	0x00000000;
+	EXTI->FTSR = 	0x00000000;
+	EXTI->SWIER = 	0x00000000;
+	EXTI->PR = 		0xFFFFFFFF;
+
+	NVIC
+}
+
+void MCAL_EXTI_GPIO_Init(EXTI_PinConfig_t * EXTI_Config);
+
+void MCAL_EXTI_GPIO_Update(EXTI_PinConfig_t * EXTI_Config);
