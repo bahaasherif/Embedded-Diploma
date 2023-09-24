@@ -32,23 +32,23 @@
 #include <STM32F103C6_KEYPAD.h>
 #include <Stm32_F103C6_SPI_driver.h>
 
-#define MCU_act_as_Master
-//#define MCU_act_as_Slave
+//#define MCU_act_as_Master
+#define MCU_act_as_Slave
 
 
 uint16_t ch ;
-//
-//void SPI1_IRQ_CallBack(S_IRQ_SRC irq_src)
-//{
-//#ifdef MCU_act_as_Slave
-//	if(irq_src.RXNE)
-//	{
-//		ch = 0xf;
-//		MCAL_SPI_Tx_Rx(SPI1, &ch, polling_Enable);
-//		MCAL_UART_SendData(USART1, &ch, Enable);
-//	}
-//#endif
-//}
+
+void SPI1_IRQ_CallBack(S_IRQ_SRC irq_src)
+{
+#ifdef MCU_act_as_Slave
+	if(irq_src.RXNE)
+	{
+		ch = 0xf;
+		MCAL_SPI_Tx_Rx(SPI1, &ch, polling_Enable);
+		MCAL_UART_SendData(USART1, &ch, Enable);
+	}
+#endif
+}
 
 void USART_IRQ_CallBack(void)
 {
@@ -125,12 +125,12 @@ int main(void)
     MCAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, 1);
 #endif
 
-//#ifdef MCU_act_as_Slave
-//	SPI1CFG.Device_Mode = SPI_DEVICE_MODE_SLAVE;
-//	SPI1CFG.IRQ_Enable = SPI_IRQ_Enable_RXNEIE;
-//	SPI1CFG.NSS = SPI_NSS_HW_SLAVE;
-//	SPI1CFG.P_IRQ_CallBack = SPI1_IRQ_CallBack;
-//#endif
+#ifdef MCU_act_as_Slave
+	SPI1CFG.Device_Mode = SPI_DEVICE_MODE_SLAVE;
+	SPI1CFG.IRQ_Enable = SPI_IRQ_Enable_RXNEIE;
+	SPI1CFG.NSS = SPI_NSS_HW_SLAVE;
+	SPI1CFG.P_IRQ_CallBack = SPI1_IRQ_CallBack;
+#endif
 
 	MCAL_SPI_Init(SPI1, &SPI1CFG);
 	MCAL_SPI_GPIO_Set_Pins(SPI1);

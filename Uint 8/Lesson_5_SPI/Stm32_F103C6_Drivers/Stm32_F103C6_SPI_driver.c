@@ -281,7 +281,7 @@ void MCAL_SPI_Tx_Rx				(SPI_TypeDef* SPIx, uint16_t* pTxBuffer, Polling_Mechanis
 //ISR
 //---------------------------------------------
 
-void SPI_IRQHandler(void)
+void SPI1_IRQHandler(void)
 {
 	S_IRQ_SRC irq_src;
 	irq_src.TXE =  (SPI1->SPI_SR & (1<<1) >> 1 );
