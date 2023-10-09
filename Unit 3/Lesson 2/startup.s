@@ -1,5 +1,5 @@
 .global reset
 reset:
-	ldr sp, =0x00011000
+	ldr sp, =start_top
 	bl main
 stop: b stop
